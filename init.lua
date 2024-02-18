@@ -94,7 +94,24 @@ require('lazy').setup({
       'folke/neodev.nvim',
     },
   },
-
+  {
+    "startup-nvim/startup.nvim",
+    requires = {"nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim"},
+    config = function()
+      require"startup".setup()
+    end
+  },
+    {
+      "nvim-telescope/telescope-file-browser.nvim",
+      dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+  },
+   {
+      "mbbill/undotree",
+  },
+  {
+    "gennaro-tedesco/nvim-jqx",
+    ft = { "json", "yaml" },
+  },
   {
     -- Autocompletion
     'hrsh7th/nvim-cmp',
@@ -188,21 +205,25 @@ require('lazy').setup({
       end,
     },
   },
-
+  { "catppuccin/nvim", name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require('catppuccin').load()
+    end,
+  },
   {
     -- Theme inspired by Atom
     'navarasu/onedark.nvim',
-    priority = 1000,
+    priority = 500,
     lazy = false,
-    config = function()
-      require('onedark').setup {
-        -- Set a style preset. 'dark' is default.
-        style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
-      }
-      require('onedark').load()
-    end,
+    -- config = function()
+    --   require('onedark').setup {
+    --     -- Set a style preset. 'dark' is default.
+    --     style = 'dark', -- dark, darker, cool, deep, warm, warmer, light
+    --   }
+    --   require('onedark').load()
+    -- end,
   },
-
   {
     -- Set lualine as statusline
     'nvim-lualine/lualine.nvim',
@@ -255,6 +276,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
+      'nvim-treesitter/nvim-treesitter-context',
     },
     build = ':TSUpdate',
   },
@@ -314,6 +336,13 @@ vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
+
+vim.cmd("set relativenumber")
+--[[ vim.cmd("set foldmethod=expr")
+vim.cmd("set foldexpr=nvim_treesitter#foldexpr()")
+vim.cmd("set nofoldenable") ]]
+
+vim.api.nvim_set_keymap(  't'  ,  'jk'  ,  '<C-\\><C-n>'  ,  {noremap = true, silent = true}  )
 
 -- [[ Basic Keymaps ]]
 
@@ -428,7 +457,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'ocaml'},
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
